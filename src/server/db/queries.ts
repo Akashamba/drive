@@ -4,10 +4,25 @@ import { db } from "~/server/db";
 import {
   files_table as filesSchema,
   folders_table as foldersSchema,
+  type DB_FileType,
 } from "~/server/db/schema";
-import { asc, eq } from "drizzle-orm";
+import { eq, isNull, and } from "drizzle-orm";
 
 export const QUERIES = {
+  getFolders: function (folderId: number) {
+    return db
+      .select()
+      .from(foldersSchema)
+      .where(eq(foldersSchema.parent, folderId))
+      .orderBy(foldersSchema.id);
+  },
+  getFiles: function (folderId: number) {
+    return db
+      .select()
+      .from(filesSchema)
+      .where(eq(filesSchema.parent, folderId))
+      .orderBy(filesSchema.id);
+  },
   getAllParentsForFolder: async function (folderId: number) {
     const parents = [];
     let currentId: number | null = folderId;
@@ -25,28 +40,20 @@ export const QUERIES = {
     }
     return parents;
   },
-
-  getFolders: function (folderId: number) {
-    return db
-      .select()
-      .from(foldersSchema)
-      .where(eq(foldersSchema.parent, folderId))
-      .orderBy(asc(foldersSchema.id));
-  },
-
-  getFiles: function (folderId: number) {
-    return db
-      .select()
-      .from(filesSchema)
-      .where(eq(filesSchema.parent, folderId))
-      .orderBy(asc(filesSchema.id));
-  },
-
   getFolderById: async function (folderId: number) {
     const folder = await db
       .select()
       .from(foldersSchema)
       .where(eq(foldersSchema.id, folderId));
+    return folder[0];
+  },
+  getRootFolderForUser: async function (userId: string) {
+    const folder = await db
+      .select()
+      .from(foldersSchema)
+      .where(
+        and(eq(foldersSchema.ownerId, userId), isNull(foldersSchema.parent)),
+      );
     return folder[0];
   },
 };
@@ -61,8 +68,9 @@ export const MUTATIONS = {
     };
     userId: string;
   }) {
-    return await db
-      .insert(filesSchema)
-      .values({ ...input.file, ownerId: input.userId });
+    return await db.insert(filesSchema).values({
+      ...input.file,
+      ownerId: input.userId,
+    });
   },
 };
