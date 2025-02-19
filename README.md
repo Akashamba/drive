@@ -2,15 +2,15 @@
 
 ## TODO
 
-- [ ] Fix sign up flow and make it look decent
+- [x] File Key issue: Store file key in db to delete from uploadthing properly
 
 - [ ] Delete a folder (Theo tip: Make sure you fetch all of the folders that have it as a parent, and their children too)
 
 - [ ] Delete a user (and all their files)
 
-- [ ] Store file types in db
+- [ ] Fix sign up flow and make it look decent
 
-- [ ] File Key issue: Store file key in db to delete from uploadthing properly
+- [ ] Store file types in db
 
 - [ ] Folder creations (Theo tip: Make a server action that takes a name and parentId, and creates a folder with that name and parentId (don't forget to set the ownerId).)
 

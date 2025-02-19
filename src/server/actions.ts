@@ -20,9 +20,7 @@ export async function deleteFile(fileId: number) {
   if (!file) {
     return { error: "File not found" };
   }
-  const utapiResult = await utApi.deleteFiles([
-    file.url.replace("https://uxd9sqneiq.ufs.sh/f/", ""),
-  ]);
+  const utapiResult = await utApi.deleteFiles([file.UTkey]);
   console.log(utapiResult);
   const dbDeleteResult = await db
     .delete(files_table)
