@@ -8,6 +8,8 @@
 
 - [ ] Delete a user (and all their files)
 
+- [ ] Fix breadcrumbs: remove root and make my drive go to root folder
+
 - [ ] Fix sign up flow and make it look decent
 
 - [ ] Store file types in db
