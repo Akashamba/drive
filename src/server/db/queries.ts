@@ -1,7 +1,10 @@
 import "server-only";
 
 import { db } from "~/server/db";
+import { auth } from "@clerk/nextjs/server";
 import {
+  DB_FileType,
+  DB_FolderType,
   files_table as filesSchema,
   folders_table as foldersSchema,
 } from "~/server/db/schema";
@@ -56,6 +59,36 @@ export const QUERIES = {
       );
     return folder[0];
   },
+
+  // getAllChildrenForFolder: async function (
+  //   folderId: number,
+  //   children: {
+  //     files: DB_FileType[];
+  //     folders: DB_FolderType[];
+  //   } | null,
+  // ) {
+  //   // Fetch all files and folders that are children of the given folder
+
+  //   if (!children) {
+  //     children = {
+  //       files: [],
+  //       folders: [],
+  //     };
+  //   }
+  //   const [files, folders] = await Promise.all([
+  //     db.select().from(filesSchema).where(eq(filesSchema.parent, folderId)),
+  //     db.select().from(foldersSchema).where(eq(foldersSchema.parent, folderId)),
+  //   ]);
+
+  //   children.files.push(...files);
+  //   children.folders.push(...folders);
+
+  //   for (const folder of folders) {
+  //     await QUERIES.getAllChildrenForFolder(folder.id, children);
+  //   }
+
+  //   return children;
+  // },
 };
 
 export const MUTATIONS = {
@@ -102,5 +135,14 @@ export const MUTATIONS = {
       },
     ]);
     return rootFolderId;
+  },
+  createFolder: async function (folder: { name: string; parent: number }) {
+    const owner = await auth();
+    if (!owner.userId) {
+      throw new Error("Unauthorized");
+    }
+    return await db
+      .insert(foldersSchema)
+      .values({ ...folder, ownerId: owner.userId });
   },
 };

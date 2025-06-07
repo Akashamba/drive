@@ -4,6 +4,8 @@
 
 - [x] File Key issue: Store file key in db to delete from uploadthing properly
 
+- [ ] Create folders
+
 - [ ] Delete a folder (Theo tip: Make sure you fetch all of the folders that have it as a parent, and their children too)
 
 - [ ] Delete a user (and all their files)

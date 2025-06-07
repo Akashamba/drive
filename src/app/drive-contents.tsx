@@ -1,12 +1,13 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, FolderPlus, PlusCircle } from "lucide-react";
 import { FileRow, FolderRow } from "./file-row";
 import type { files_table, folders_table } from "~/server/db/schema";
 import Link from "next/link";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { UploadButton } from "~/components/uploadthing";
 import { useRouter } from "next/navigation";
+import { Button } from "~/components/ui/button";
 
 export default function DriveContents(props: {
   files: (typeof files_table.$inferSelect)[];
@@ -37,12 +38,27 @@ export default function DriveContents(props: {
             ))}
           </div>
           <div>
-            <SignedOut>
-              <SignInButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
+            <div className="flex items-center">
+              <Button variant="ghost" className="mr-5" aria-label="New Folder">
+                <FolderPlus
+                  size={16}
+                  // onClick={() =>
+                  //   MUTATIONS.createFolder({
+                  //     name: "New Folder",
+                  //     parent: props.currentFolderId,
+                  //   })
+                  // }
+                />
+                New Folder
+              </Button>
+
+              <SignedOut>
+                <SignInButton />
+              </SignedOut>
+              <SignedIn>
+                <UserButton />
+              </SignedIn>
+            </div>
           </div>
         </div>
         <div className="rounded-lg bg-gray-800 shadow-xl">
